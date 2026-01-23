@@ -1,0 +1,23 @@
+# Terraform Variables Template
+# Copy this file to terraform.tfvars and fill in with your actual values
+# DO NOT commit terraform.tfvars to Git (it contains secrets)
+
+# Azure Resource Configuration
+resource_group_name      = "rg-foodbythebook-dev"
+location                 = "westeurope"  # Change to your preferred region
+static_web_app_name      = "swa-foodbythebook-dev"
+function_app_name        = "func-foodbythebook-dev"
+storage_account_name     = "stfoodbythebook123"  # Must be globally unique, 3-24 chars, lowercase letters and numbers only
+app_service_plan_name    = "asp-foodbythebook-dev"
+
+# Supabase Configuration
+# Get from: https://supabase.com/dashboard → Your Project → Settings
+supabase_connection_string = "Host=db.xxxxx.supabase.co;Database=postgres;Username=postgres;Password=YOUR_PASSWORD_HERE"
+supabase_url               = "https://xxxxx.supabase.co"
+supabase_key               = "your-supabase-anon-key-here"
+
+# Microsoft OAuth Configuration  
+# Get from: https://portal.azure.com → Entra ID → App Registrations → Your App
+azure_ad_tenant_id     = "your-tenant-id-here"
+azure_ad_client_id     = "your-client-id-here"
+azure_ad_client_secret = "your-client-secret-here"
