@@ -11,8 +11,7 @@ This guide provides step-by-step instructions for AI-assisted development of Foo
 Before starting, ensure these tools are installed:
 
 ### Required Tools
-- [ ] **Node.js 18+** - For frontend development
-- [ ] **npm or yarn** - Package manager
+- [ ] **Node.js 18+** - For frontend development (includes npm)
 - [ ] **.NET 8 SDK** - For Azure Functions backend
 - [ ] **Azure Functions Core Tools v4** - Local function runtime
 - [ ] **Git** - Version control
