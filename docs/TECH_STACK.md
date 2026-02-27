@@ -83,40 +83,57 @@ When selecting technologies, consider:
 - Bootstrap
 - Shadcn/ui
 
-### Data Fetching
-**Selected:** SWR (Stale-While-Revalidate)
+### Data Fetching & State Management
+**Selected:** Redux Toolkit (RTK) + RTK Query
 
 **Rationale:**
-- **Hooks-based API:** `useSWR('https://your-functions.azurewebsites.net/api/recipes', fetcher)`
-- **Works with Any Backend:** Perfect for calling Azure Functions endpoints
-- **Auto-revalidation:** Keeps data fresh automatically
-- **Caching:** Built-in cache, reduces API calls
-- **FREE:** Open source, no cost
-- **Small bundle:** Lightweight library
+- **Organizational Backing:** Official Redux library maintained by Redux core team (Mark Erikson + contributors)
+- **Industry Standard:** Redux is the most widely-adopted React state library
+- **Enterprise Ready:** Used by Microsoft, Spotify, Amazon, and thousands of companies
+- **Integrated Solution:** State management + data fetching in one package
+- **TypeScript First:** Excellent type inference and auto-generated hooks
+- **Powerful Caching:** Tag-based cache invalidation with automatic refetching
+- **Code Generation:** Auto-generates hooks from API endpoint definitions
+- **DevTools:** Redux DevTools for debugging state and API calls
+- **Long-term Support:** Redux has been stable for 10+ years with active maintenance
+- **FREE:** Open source, MIT licensed
 
-**Features:**
-- Automatic refetching on focus
-- Optimistic UI updates
-- Pagination support
-- TypeScript support
+**Key Features:**
+- Automatic request deduplication
+- Optimistic updates with automatic rollback
+- Tag-based cache invalidation
+- Polling and refetching strategies
+- TypeScript endpoint definitions
+- Auto-generated React hooks
+- Normalized cache (optional)
+- Request cancellation
 
-**Alternative:** React Query (more features, slightly heavier)
+**Why RTK Query over alternatives:**
+- **vs React Query:** Organizational backing (Redux team vs single maintainer)
+- **vs SWR:** More features for scaling, better mutations, integrated state management
+- **vs Apollo:** Works with REST APIs (Apollo is GraphQL-only)
+
+**Bundle Size:** ~20KB (Redux Toolkit + RTK Query) - includes full state management
+
+**Trade-off:** Slightly more setup than SWR, but provides comprehensive solution for both state management and data fetching.
 
 ### State Management
-**Selected:** React Hooks (useState, useContext, custom hooks)
+**Selected:** Redux Toolkit (RTK) with RTK Query
 
 **Rationale:**
-- **Built-in:** No extra library needed
-- **Sufficient for MVP:** User session, recipe list, forms are not complex
-- **Hooks-based:** Fits chosen React approach
-- **Custom hooks:** Can extract reusable logic (usePhotoUpload, useRecipes)
+- **Unified Solution:** State management + data fetching in one package
+- **Official Redux Approach:** Modern Redux with less boilerplate
+- **Organizational Support:** Redux core team maintenance
+- **Scalable:** Designed for apps that grow beyond MVP
+- **DevTools:** Excellent debugging experience
+- **TypeScript:** First-class TypeScript support
 
 **Implementation:**
+- **Redux Toolkit:** Global state (user session, UI state)
+- **RTK Query:** Server state (recipes, ratings) with auto-generated hooks
 - `useState` for local component state
-- `useContext` for global state (if needed)
-- Custom hooks for shared logic
-- NextAuth's `useSession` for auth state
-- SWR's hooks for data fetching
+- `createSlice` for Redux state slices (if needed beyond RTK Query)
+- RTK Query's auto-generated hooks for all API operations
 
 **Options:**
 - Zustand

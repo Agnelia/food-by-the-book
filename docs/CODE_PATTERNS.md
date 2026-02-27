@@ -10,15 +10,17 @@ This document provides concrete code patterns and templates for AI-assisted deve
 3. [Project Structure](#project-structure)
 4. [Naming Conventions](#naming-conventions)
 5. [TypeScript Types](#typescript-types)
-6. [UI Component Pattern](#ui-component-pattern)
-7. [Page Component Pattern](#page-component-pattern)
-8. [Custom Hook Pattern](#custom-hook-pattern)
-9. [API Service Pattern](#api-service-pattern)
-10. [Backend C# Patterns](#backend-c-patterns)
-11. [Error Handling](#error-handling)
-12. [Import Order](#import-order)
-13. [Comment Guidelines](#comment-guidelines)
-14. [File Templates](#file-templates)
+6. [RTK Query API Slice Pattern](#rtk-query-api-slice-pattern)
+7. [RTK Query Anti-Patterns](#rtk-query-anti-patterns)
+8. [UI Component Pattern](#ui-component-pattern)
+9. [Page Component Pattern](#page-component-pattern)
+10. [Custom Hook Pattern](#custom-hook-pattern)
+11. [API Service Pattern](#api-service-pattern)
+12. [Backend C# Patterns](#backend-c-patterns)
+13. [Error Handling](#error-handling)
+14. [Import Order](#import-order)
+15. [Comment Guidelines](#comment-guidelines)
+16. [File Templates](#file-templates)
 
 ---
 
@@ -734,185 +736,432 @@ export function Recipes() {
 
 ---
 
-## Custom Hook Pattern
+## RTK Query API Slice Pattern
 
-### Data Fetching Hook Template
+### API Slice Template
 
 ```typescript
-// hooks/use[Resource].ts
-import useSWR from 'swr';
-import { [Resource], [Resource]Response } from '@/types';
-import { [resource]Service } from '@/services/[resource]Service';
+// store/api/[resource]Api.ts - RTK Query API slice
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type {
+  [Resource],
+  Create[Resource]Dto,
+  Update[Resource]Dto,
+} from '@/types';
 
-export function use[Resources]() {
-  const { data, error, isLoading, mutate } = useSWR<[Resource]Response[]>(
-    '/api/[resources]',
-    [resource]Service.getAll
-  );
+// Create API slice
+export const [resource]Api = createApi({
+  reducerPath: '[resource]Api',
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.VITE_API_URL,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
+  tagTypes: ['[Resource]'],
+  endpoints: (builder) => ({
+    // GET /api/[resources]
+    get[Resources]: builder.query<[Resource][], void>({
+      query: () => '/[resources]',
+      providesTags: ['[Resource]'],
+    }),
+    
+    // GET /api/[resources]/:id
+    get[Resource]: builder.query<[Resource], string>({
+      query: (id) => `/[resources]/${id}`,
+      providesTags: (result, error, id) => [{ type: '[Resource]', id }],
+    }),
+    
+    // POST /api/[resources]
+    create[Resource]: builder.mutation<[Resource], Create[Resource]Dto>({
+      query: (data) => ({
+        url: '/[resources]',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['[Resource]'],
+    }),
+    
+    // PUT /api/[resources]/:id
+    update[Resource]: builder.mutation<[Resource], { id: string; data: Update[Resource]Dto }>({
+      query: ({ id, data }) => ({
+        url: `/[resources]/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: '[Resource]', id }, '[Resource]'],
+    }),
+    
+    // DELETE /api/[resources]/:id
+    delete[Resource]: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/[resources]/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['[Resource]'],
+    }),
+  }),
+});
 
-  return {
-    [resources]: data || [],
-    isLoading,
-    isError: !!error,
-    error,
-    refresh: mutate
+// Export auto-generated hooks
+export const {
+  useGet[Resources]Query,
+  useGet[Resource]Query,
+  useCreate[Resource]Mutation,
+  useUpdate[Resource]Mutation,
+  useDelete[Resource]Mutation,
+} = [resource]Api;
+```
+
+### Example: Recipe API Slice
+
+```typescript
+// store/api/recipeApi.ts
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Recipe, CreateRecipeDto, UpdateRecipeDto } from '@/types';
+
+export const recipeApi = createApi({
+  reducerPath: 'recipeApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.VITE_API_URL,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
+  tagTypes: ['Recipe'],
+  endpoints: (builder) => ({
+    getRecipes: builder.query<Recipe[], void>({
+      query: () => '/recipes',
+      providesTags: ['Recipe'],
+    }),
+    
+    getRecipe: builder.query<Recipe, string>({
+      query: (id) => `/recipes/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Recipe', id }],
+    }),
+    
+    createRecipe: builder.mutation<Recipe, CreateRecipeDto>({
+      query: (data) => ({ url: '/recipes', method: 'POST', body: data }),
+      invalidatesTags: ['Recipe'],
+    }),
+    
+    updateRecipe: builder.mutation<Recipe, { id: string; data: UpdateRecipeDto }>({
+      query: ({ id, data }) => ({ url: `/recipes/${id}`, method: 'PUT', body: data }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Recipe', id }, 'Recipe'],
+    }),
+    
+    deleteRecipe: builder.mutation<void, string>({
+      query: (id) => ({ url: `/recipes/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['Recipe'],
+    }),
+  }),
+});
+
+export const {
+  useGetRecipesQuery,
+  useGetRecipeQuery,
+  useCreateRecipeMutation,
+  useUpdateRecipeMutation,
+  useDeleteRecipeMutation,
+} = recipeApi;
+```
+
+### Redux Store Setup
+
+```typescript
+// store/store.ts
+import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { recipeApi } from './api/recipeApi';
+
+export const store = configureStore({
+  reducer: {
+    // Add RTK Query reducer
+    [recipeApi.reducerPath]: recipeApi.reducer,
+    // Add other slices here if needed
+  },
+  // Add RTK Query middleware
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(recipeApi.middleware),
+});
+
+// Enable refetch on focus/reconnect
+setupListeners(store.dispatch);
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+
+### App Setup with Provider
+
+```typescript
+// main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+);
+```
+
+### Component Usage Pattern
+
+```typescript
+// pages/RecipeListPage.tsx
+import { useGetRecipesQuery, useDeleteRecipeMutation } from '@/store/api/recipeApi';
+import { RecipeCard } from '@/components/recipes/RecipeCard';
+
+export function RecipeListPage() {
+  // Auto-generated query hook
+  const { data: recipes, isLoading, error, refetch } = useGetRecipesQuery();
+  
+  // Auto-generated mutation hook
+  const [deleteRecipe, { isLoading: isDeleting }] = useDeleteRecipeMutation();
+  
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteRecipe(id).unwrap();
+      // Recipes list automatically refetches due to invalidatesTags
+    } catch (err) {
+      console.error('Failed to delete recipe:', err);
+    }
   };
-}
-
-export function use[Resource](id: string | undefined) {
-  const { data, error, isLoading, mutate } = useSWR<[Resource]Response>(
-    id ? `/api/[resources]/${id}` : null,
-    id ? () => [resource]Service.getById(id) : null
+  
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading recipes</div>;
+  
+  return (
+    <div>
+      <h1>Recipes</h1>
+      <button onClick={() => refetch()}>Refresh</button>
+      {recipes?.map(recipe => (
+        <RecipeCard
+          key={recipe.id}
+          recipe={recipe}
+          onDelete={() => handleDelete(recipe.id)}
+        />
+      ))}
+    </div>
   );
-
-  return {
-    [resource]: data,
-    isLoading,
-    isError: !!error,
-    error,
-    refresh: mutate
-  };
 }
 ```
 
-### Example: useRecipes
+### Advanced RTK Query Patterns
+
+#### Optimistic Updates
 
 ```typescript
-// hooks/useRecipes.ts
-import useSWR from 'swr';
-import { Recipe, RecipesResponse, RecipeResponse } from '@/types';
-import { recipeService } from '@/services/recipeService';
+// Optimistic update for better UX
+updateRecipe: builder.mutation<Recipe, { id: string; data: UpdateRecipeDto }>({
+  query: ({ id, data }) => ({
+    url: `/recipes/${id}`,
+    method: 'PUT',
+    body: data,
+  }),
+  
+  // Optimistic update
+  async onQueryStarted({ id, data }, { dispatch, queryFulfilled }) {
+    // Update cache optimistically
+    const patchResult = dispatch(
+      recipeApi.util.updateQueryData('getRecipe', id, (draft) => {
+        Object.assign(draft, data);
+      })
+    );
+    
+    try {
+      await queryFulfilled;
+    } catch {
+      // Rollback on error
+      patchResult.undo();
+    }
+  },
+  
+  invalidatesTags: (result, error, { id }) => [{ type: 'Recipe', id }],
+}),
+```
 
-export function useRecipes() {
-  const { data, error, isLoading, mutate } = useSWR<RecipesResponse>(
-    '/api/recipes',
-    recipeService.getAll
-  );
+#### Conditional Queries
 
-  return {
-    recipes: data || [],
-    isLoading,
-    isError: !!error,
-    error,
-    refresh: mutate
-  };
-}
-
-export function useRecipe(id: string | undefined) {
-  const { data, error, isLoading, mutate } = useSWR<RecipeResponse>(
-    id ? `/api/recipes/${id}` : null,
-    id ? () => recipeService.getById(id) : null
-  );
-
-  return {
-    recipe: data,
-    isLoading,
-    isError: !!error,
-    error,
-    refresh: mutate
-  };
+```typescript
+// Only fetch when id is available
+export function RecipeDetailPage({ recipeId }: { recipeId?: string }) {
+  const { data: recipe, isLoading } = useGetRecipeQuery(recipeId!, {
+    skip: !recipeId, // Skip query if no ID
+  });
+  
+  if (!recipeId) return <div>No recipe selected</div>;
+  if (isLoading) return <div>Loading...</div>;
+  
+  return <div>{recipe?.title}</div>;
 }
 ```
 
-### Mutation Hook Template
+#### Polling and Refetching
 
 ```typescript
-// hooks/use[Resource]Mutations.ts
-import { useState } from 'react';
-import { use[Resources] } from './use[Resources]';
-import { [resource]Service } from '@/services/[resource]Service';
-import { Create[Resource]Request, Update[Resource]Request } from '@/types';
+// Automatic polling
+const { data } = useGetRecipesQuery(undefined, {
+  pollingInterval: 30000, // Refetch every 30 seconds
+});
 
-export function useCreate[Resource]() {
-  const [isCreating, setIsCreating] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const { refresh } = use[Resources]();
+// Refetch on focus/reconnect (enabled by setupListeners)
+setupListeners(store.dispatch);
+```
 
-  const create[Resource] = async (data: Create[Resource]Request) => {
-    setIsCreating(true);
-    setError(null);
-    
-    try {
-      const new[Resource] = await [resource]Service.create(data);
-      await refresh(); // Refresh list
-      return new[Resource];
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      throw error;
-    } finally {
-      setIsCreating(false);
-    }
-  };
+---
 
-  return {
-    create[Resource],
-    isCreating,
-    error
-  };
+## RTK Query Anti-Patterns
+
+### ❌ DON'T: Fetch data directly in components
+
+```typescript
+// ❌ BAD: Manual fetch without RTK Query
+function RecipesList() {
+  const [recipes, setRecipes] = useState([]);
+  
+  useEffect(() => {
+    fetch('/api/recipes')
+      .then(res => res.json())
+      .then(setRecipes);
+  }, []);
+  
+  // No caching, no refetching, manual error handling
 }
+```
 
-export function useUpdate[Resource]() {
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const update[Resource] = async (id: string, data: Update[Resource]Request) => {
-    setIsUpdating(true);
-    setError(null);
-    
-    try {
-      const updated[Resource] = await [resource]Service.update(id, data);
-      return updated[Resource];
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      throw error;
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  return {
-    update[Resource],
-    isUpdating,
-    error
-  };
+```typescript
+// ✅ GOOD: Use RTK Query hook
+function RecipesList() {
+  const { data: recipes, isLoading, error } = useGetRecipesQuery();
+  
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  
+  return <div>{recipes.map(r => <RecipeCard key={r.id} recipe={r} />)}</div>;
 }
+```
 
-export function useDelete[Resource]() {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const { refresh } = use[Resources]();
+### ❌ DON'T: Forget invalidatesTags in mutations
 
-  const delete[Resource] = async (id: string) => {
-    setIsDeleting(true);
-    setError(null);
-    
-    try {
-      await [resource]Service.delete(id);
-      await refresh(); // Refresh list
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      throw error;
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+```typescript
+// ❌ BAD: No cache invalidation
+createRecipe: builder.mutation<Recipe, CreateRecipeDto>({
+  query: (data) => ({ url: '/recipes', method: 'POST', body: data }),
+  // Missing invalidatesTags - list won't update!
+}),
+```
 
-  return {
-    delete[Resource],
-    isDeleting,
-    error
-  };
-}
+```typescript
+// ✅ GOOD: Invalidate tags to refetch
+createRecipe: builder.mutation<Recipe, CreateRecipeDto>({
+  query: (data) => ({ url: '/recipes', method: 'POST', body: data }),
+  invalidatesTags: ['Recipe'], // Auto-refetch recipe list
+}),
+```
+
+### ❌ DON'T: Define endpoints outside API slices
+
+```typescript
+// ❌ BAD: Defining fetch logic in components or services
+const fetchRecipes = async () => {
+  const response = await fetch('/api/recipes');
+  return response.json();
+};
+```
+
+```typescript
+// ✅ GOOD: Define in RTK Query API slice
+export const recipeApi = createApi({
+  endpoints: (builder) => ({
+    getRecipes: builder.query<Recipe[], void>({
+      query: () => '/recipes',
+    }),
+  }),
+});
+```
+
+### ❌ DON'T: Forget to add middleware
+
+```typescript
+// ❌ BAD: Missing RTK Query middleware
+export const store = configureStore({
+  reducer: {
+    [recipeApi.reducerPath]: recipeApi.reducer,
+  },
+  // Missing middleware - queries won't work!
+});
+```
+
+```typescript
+// ✅ GOOD: Include RTK Query middleware
+export const store = configureStore({
+  reducer: {
+    [recipeApi.reducerPath]: recipeApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(recipeApi.middleware),
+});
+```
+
+### ❌ DON'T: Use wrong hook type
+
+```typescript
+// ❌ BAD: Using query hook for mutations
+const { data } = useGetRecipesQuery(); // This is a query hook
+// How do I create a recipe?
+```
+
+```typescript
+// ✅ GOOD: Use mutation hooks for mutations
+const { data: recipes } = useGetRecipesQuery(); // For fetching
+const [createRecipe] = useCreateRecipeMutation(); // For creating
+```
+
+### ❌ DON'T: Ignore error handling
+
+```typescript
+// ❌ BAD: No error handling
+const handleCreate = async (data: CreateRecipeDto) => {
+  await createRecipe(data);
+  // What if it fails?
+};
+```
+
+```typescript
+// ✅ GOOD: Handle errors properly
+const handleCreate = async (data: CreateRecipeDto) => {
+  try {
+    await createRecipe(data).unwrap();
+    toast.success('Recipe created!');
+  } catch (err) {
+    toast.error('Failed to create recipe');
+    console.error(err);
+  }
+};
 ```
 
 ---
 
 ## API Service Pattern
 
-### Service Template
+**Note:** With RTK Query, you may not need separate service files. However, if you need shared utility functions for data transformation, keep them in services.
+
+### Service Template (Optional with RTK Query)
 
 ```typescript
 // services/[resource]Service.ts

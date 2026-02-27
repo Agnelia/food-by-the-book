@@ -44,7 +44,7 @@
 │  │  - React Router for navigation                         │  │
 │  │  - React components with hooks                         │  │
 │  │  - Tesseract.js for OCR (client-side)                  │  │
-│  │  - SWR for data fetching                               │  │
+│  │  - Redux Toolkit + RTK Query for state/data           │  │
 │  │  - @azure/msal-browser for auth                        │  │
 │  └────────────────────────────────────────────────────────┘  │
 └───────────────────────────┬──────────────────────────────────┘
@@ -441,204 +441,68 @@ With AI code generation, wrap ALL standard components upfront (Day 1). The cost 
 
 ---
 
-### Data Fetching Abstraction Layer
-**Strategy:** Create custom hooks to avoid vendor lock-in with data fetching libraries (SWR, React Query)
+### Data Fetching with RTK Query
+**Strategy:** Define API endpoints in RTK Query slices with auto-generated hooks
 
-#### Why Abstract Data Fetching?
-- **Easy Migration:** Switch from SWR to React Query by changing hook files only
-- **Consistent API:** Standard interface regardless of underlying library
-- **Testing:** Mock data fetching without importing actual libraries
-- **Business Logic:** Centralize data transformation, error handling, retry logic
+#### Why RTK Query?
+- **Auto-generated Hooks:** Define endpoints once, get hooks automatically
+- **Tag-based Caching:** Invalidate cache by tags, not manual key management
+- **Type Safety:** Full TypeScript inference from endpoint definitions
+- **Organizational Backing:** Redux team maintains it, not single developer
+- **Integrated Solution:** State management + data fetching in one package
+- **DevTools:** Redux DevTools shows all API calls and cache state
 
 #### Folder Structure
 ```
 /src
-  /hooks                    # Data fetching abstraction layer
-    useRecipes.ts           # Recipe CRUD operations
-    useAuth.ts              # Authentication state
-    usePhotoUpload.ts       # Image upload with OCR
-    useOCR.ts               # OCR processing
-    index.ts                # Barrel exports
-  /services                 # API layer (used by hooks)
-    api.ts                  # Axios/fetch wrapper
-    recipeService.ts        # Recipe API calls
-    authService.ts          # Auth API calls
+  /store
+    /api                   # RTK Query API slices
+      recipeApi.ts         # Recipe endpoints
+      authApi.ts           # Auth endpoints
+      userApi.ts           # User endpoints
+    store.ts               # Redux store configuration
+  /components              # React components
+  /pages                   # Page components
+  /types                   # TypeScript types
 ```
 
-#### Example: Recipe Data Hook Abstraction
+#### Implementation Details
+For complete RTK Query implementation patterns including:
+- API slice structure with `createApi`
+- Tag-based cache invalidation
+- Optimistic updates
+- Component usage examples
+- Store setup and configuration
 
-```tsx
-// hooks/useRecipes.ts - Abstraction layer
-import useSWR from 'swr';
-import { recipeService } from '@/services/recipeService';
+**See:** [docs/CODE_PATTERNS.md](CODE_PATTERNS.md#rtk-query-api-slice-pattern)
 
-export function useRecipes() {
-  const { data, error, isLoading, mutate } = useSWR(
-    '/api/recipes',
-    recipeService.getAll
-  );
-  
-  return {
-    recipes: data || [],
-    isLoading,
-    isError: !!error,
-    error,
-    refresh: mutate  // ← Abstract library-specific names
-  };
-}
+#### RTK Query Implementation Checklist
 
-export function useRecipe(id: string) {
-  const { data, error, isLoading, mutate } = useSWR(
-    id ? `/api/recipes/${id}` : null,
-    () => recipeService.getById(id)
-  );
-  
-  return {
-    recipe: data,
-    isLoading,
-    isError: !!error,
-    error,
-    refresh: mutate
-  };
-}
-```
+**API Endpoints to Create:**
+- [ ] Recipe CRUD (create, read, update, delete)
+- [ ] User management
+- [ ] Authentication endpoints
+- [ ] Image upload
+- [ ] Recipe search
 
-#### Usage in Components
-```tsx
-// ✅ GOOD: Import from custom hooks
-import { useRecipes, useRecipe } from '@/hooks';
+**Best Practices:**
+- Define all endpoints in RTK Query API slices
+- Use auto-generated hooks in components
+- Leverage tag-based cache invalidation
+- Implement optimistic updates for better UX
+- Centralize auth headers in base query
 
-function RecipesList() {
-  const { recipes, isLoading, refresh } = useRecipes();
-  
-  if (isLoading) return <UILoading />;
-  
-  return (
-    <div>
-      <UIButton onClick={refresh}>Refresh</UIButton>
-      {recipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} />)}
-    </div>
-  );
-}
-
-// ❌ BAD: Direct import from data fetching library
-import useSWR from 'swr';
-
-function RecipesList() {
-  const { data, isLoading, mutate } = useSWR('/api/recipes', fetcher);
-  // If you switch to React Query, you need to change this everywhere!
-}
-```
-
-#### Switching Data Fetching Libraries
-When switching from SWR to React Query:
-
-```tsx
-// hooks/useRecipes.ts - Only change this file
-// import useSWR from 'swr';  // Old
-import { useQuery } from '@tanstack/react-query';  // New
-
-export function useRecipes() {
-  // const { data, error, isLoading, mutate } = useSWR(...)  // Old
-  const { data, error, isLoading, refetch } = useQuery({     // New
-    queryKey: ['recipes'],
-    queryFn: recipeService.getAll
-  });
-  
-  return {
-    recipes: data || [],
-    isLoading,
-    isError: !!error,
-    error,
-    refresh: refetch  // ← Same interface, different implementation
-  };
-}
-```
-
-**Result:** All components using `useRecipes()` work without changes! ✨
-
-#### Data Fetching Hooks Pattern
-
-**Standard Hook Interface:**
-```tsx
-// All data hooks should return consistent structure
-interface DataHookReturn<T> {
-  data: T | undefined;
-  isLoading: boolean;
-  isError: boolean;
-  error: Error | undefined;
-  refresh: () => void;
-}
-
-// Example
-function useRecipes(): DataHookReturn<Recipe[]> { ... }
-function useRecipe(id: string): DataHookReturn<Recipe> { ... }
-```
-
-**Mutation Hooks:**
-```tsx
-// hooks/useRecipeMutations.ts
-export function useCreateRecipe() {
-  const { recipes, refresh } = useRecipes();
-  
-  async function createRecipe(recipe: CreateRecipeRequest) {
-    // Optimistic update (optional)
-    // ...
-    
-    // Call API
-    const newRecipe = await recipeService.create(recipe);
-    
-    // Refresh list
-    refresh();
-    
-    return newRecipe;
-  }
-  
-  return { createRecipe };
-}
-```
-
-#### Data Fetching Hooks to Create
-
-**Core Data Hooks:**
-- [ ] `useRecipes()` - List all recipes
-- [ ] `useRecipe(id)` - Get single recipe
-- [ ] `useCreateRecipe()` - Create recipe mutation
-- [ ] `useUpdateRecipe()` - Update recipe mutation
-- [ ] `useDeleteRecipe()` - Delete recipe mutation
-- [ ] `useAuth()` - Authentication state
-- [ ] `useUser()` - Current user data
-
-**Feature-Specific Hooks:**
-- [ ] `usePhotoUpload()` - Upload image to Supabase
-- [ ] `useOCR()` - Process image with Tesseract.js
-- [ ] `useRecipeSearch(query)` - Search recipes
-- [ ] `useRecipeImages(recipeId)` - Get recipe images
-
-#### Guidelines
-1. **Import Rule:** Only `/hooks` may import data fetching libraries (SWR/React Query)
-2. **Naming Convention:** Use standard hook pattern (`useRecipes`, `useRecipe`, etc.)
-3. **Barrel Exports:** Always import from `@/hooks`, never from individual hook files
-4. **Consistent Interface:** All hooks return `{ data, isLoading, isError, error, refresh }`
-5. **Service Layer:** Hooks call API services, never fetch directly
-6. **No Library in Components:** Components never import SWR/React Query directly
-
-**Benefits:**
-- Switch libraries: Change 5-10 hook files vs. 50+ components
-- Migration time: 1-2 hours vs. 1-2 days
-- Same pattern as UI component abstraction
-- Easy to test: Mock hooks instead of fetch library
-5. **TypeScript:** Strong typing for all wrapper props (e.g., `UIButtonProps`)
-6. **Documentation:** Document prop mapping in comments
-7. **Testing:** Test wrappers independently of UI library
-8. **AI Instructions:** Instruct AI to ONLY use UI-prefixed components, never library directly
+**For detailed implementation patterns, code templates, and anti-patterns:**  
+**See:** [docs/CODE_PATTERNS.md](CODE_PATTERNS.md#rtk-query-api-slice-pattern)
 
 ### State Management Strategy
-[Describe how you'll manage state]
-- **Global State:** [Redux, Zustand, etc.] for [what data]
-- **Server State:** [React Query, SWR] for [API data]
-- **Local State:** [useState] for [component-specific data]
-- **URL State:** [React Router] for [navigation state]
+**Unified with Redux Toolkit:**
+- **Server State:** RTK Query for API data (recipes, users, ratings)
+- **Global State:** Redux Toolkit slices for global UI state (if needed)
+- **Client State:** React hooks (useState) for local component state
+- **URL State:** React Router for navigation and filters
+- **Form State:** React Hook Form for form inputs
+- **Auth State:** Microsoft OAuth + JWT (can use Redux slice or localStorage)
 
 ---
 
