@@ -2,6 +2,14 @@
 
 This document provides concrete code patterns and templates for AI-assisted development. Follow these patterns exactly to ensure consistency.
 
+**📌 This is the single source of truth for all code generation.** All code examples, templates, and patterns are defined here. Other documentation files (like `.github/copilot-instructions.md`) link to specific sections of this document rather than duplicating examples.
+
+**🔗 Cross-references:** Each pattern includes links back to why it exists and where it's used:
+- References to [ARCHITECTURE.md](ARCHITECTURE.md) for system design rationale
+- References to [DATA_MODELS.md](DATA_MODELS.md) for type definitions
+- References to [TECH_STACK.md](TECH_STACK.md) for technology choices
+- References to `.github/copilot-instructions.md` for quick navigation
+
 ---
 
 ## Table of Contents
