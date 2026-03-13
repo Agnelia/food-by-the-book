@@ -1,0 +1,67 @@
+# ===========================
+# Dependencies
+# ===========================
+**/node_modules/
+
+# ===========================
+# Build Outputs
+# ===========================
+
+# Vite / React frontend build
+frontend/dist/
+frontend/build/
+
+# .NET backend build artifacts
+backend/**/bin/
+backend/**/obj/
+backend/**/publish/
+
+# ===========================
+# Test Results & Coverage
+# ===========================
+**/coverage/
+**/TestResults/
+**/.nyc_output/
+
+# ===========================
+# Terraform State & Secrets
+# ===========================
+infrastructure/**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+!infrastructure/terraform.tfvars.example
+
+# ===========================
+# Environment & Secret Files
+# ===========================
+**/.env
+**/.env.local
+**/.env.*.local
+**/local.settings.json
+
+# ===========================
+# Logs & Diagnostics
+# ===========================
+**/logs/
+**/*.log
+**/npm-debug.log*
+
+# ===========================
+# Cache & Temp Files
+# ===========================
+**/.cache/
+**/.temp/
+**/.tmp/
+**/.vite/
+
+# ===========================
+# Inspiration / Reference & Docs
+# ===========================
+inspiration/
+docs/
+
+# ===========================
+# Git Internals
+# ===========================
+.git/
