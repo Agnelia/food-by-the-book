@@ -3,7 +3,7 @@
 ## Project Overview
 **Project Name:** FoodByTheBook  
 **Version:** 1.0  
-**Last Updated:** January 23, 2026
+**Last Updated:** March 13, 2026
 
 ### Vision Statement
 FoodByTheBook transforms everyday meal planning from a stressful chore into an effortless experience by digitizing your cherished paper recipes and using AI to suggest meals that match your mood, dietary needs, and family preferences. We help families preserve their culinary heritage while making daily cooking decisions easier and more enjoyable.
@@ -47,7 +47,7 @@ Families struggle with meal planning due to scattered paper recipes, decision fa
 - [x] Design system architecture (see [ARCHITECTURE.md](ARCHITECTURE.md))
 - [x] Create data models (see [DATA_MODELS.md](DATA_MODELS.md))
 - [x] Plan API structure (see [ARCHITECTURE.md](ARCHITECTURE.md#api-design))
-- [ ] Define security requirements ⚠️ Partially in [ARCHITECTURE.md](ARCHITECTURE.md#authentication--security) — needs formalization
+- [x] Define security requirements (see [REQUIREMENTS.md](REQUIREMENTS.md#security) + [ARCHITECTURE.md](ARCHITECTURE.md#authentication--security))
 
 ### Phase 2: Setup & Infrastructure 📋
 - [ ] Set up version control repository
@@ -83,18 +83,64 @@ Families struggle with meal planning due to scattered paper recipes, decision fa
 - [ ] Gather user feedback
 - [ ] Plan next iteration
 
+### Phase 6: Scale & Future Features 🔭
+> **Trigger:** Revisit this phase when user base grows, features expand, or performance bottlenecks appear.
+
+#### Architecture
+- [ ] Evaluate moving from Azure Functions Consumption to Flex Consumption or App Service plan (cold start issues at scale)
+- [ ] Add a caching layer (Redis) for frequently accessed recipes and AI suggestions
+- [ ] Consider splitting the monolithic API into smaller, domain-focused function apps
+- [ ] Evaluate database connection pooling (PgBouncer) if Supabase free tier connections become a bottleneck
+
+#### Authentication & Authorization
+- [ ] Implement role-based access control (RBAC) for family member roles (admin, viewer, etc.)
+- [ ] Add family account linking — multiple users sharing a recipe collection
+- [ ] Introduce refresh token rotation for longer sessions without re-login
+
+#### Security
+- [ ] Add per-user rate limiting middleware (currently only Azure Functions global limit)
+- [ ] Formal OWASP Top 10 audit
+- [ ] Penetration testing
+- [ ] Add audit logging for sensitive operations (delete, account changes)
+
+#### Data & Storage
+- [ ] Implement soft deletes instead of hard deletes (recoverability)
+- [ ] Add database migrations tooling (e.g., Flyway or EF Core migrations) for schema versioning
+- [ ] Image CDN — move recipe images from Supabase Storage to Azure CDN for performance
+- [ ] Data export feature (GDPR compliance — users can download their data)
+
+#### Frontend
+- [ ] Add service worker / PWA support for offline recipe access
+- [ ] Lazy loading and code splitting for faster initial load
+- [ ] Accessibility audit (WCAG 2.1 AA compliance)
+- [ ] End-to-end tests (Playwright or Cypress)
+
+#### Observability
+- [ ] Structured logging with correlation IDs across frontend and backend
+- [ ] Set up Azure Application Insights for performance monitoring
+- [ ] Alerting for error rate thresholds and latency spikes
+- [ ] Dashboard for key business metrics (active users, recipes created, OCR usage)
+
+#### Features (when validated by user feedback)
+- [ ] AI-powered meal suggestions based on mood, season, and family preferences
+- [ ] Weekly meal plan generation and shopping list export
+- [ ] Family rating/feedback system on meals
+- [ ] Recipe sharing (public profiles or invite links)
+- [ ] Nutrition information per recipe
+
 ---
 
 ## Key Milestones
 
 | Milestone | Target Date | Status | Notes |
 |-----------|-------------|--------|-------|
-| Planning Complete | TBD | Not Started | |
-| Tech Stack Finalized | TBD | Not Started | |
-| Development Environment Ready | TBD | Not Started | |
-| MVP Feature Complete | TBD | Not Started | |
-| Testing Complete | TBD | Not Started | |
-| Production Launch | TBD | Not Started | |
+| Planning Complete | TBD | ✅ Done | All Phase 1 items complete |
+| Tech Stack Finalized | TBD | ✅ Done | See [TECH_STACK.md](TECH_STACK.md) |
+| Development Environment Ready | TBD | ⬜ Not Started | |
+| MVP Feature Complete | TBD | ⬜ Not Started | |
+| Testing Complete | TBD | ⬜ Not Started | |
+| Production Launch | TBD | ⬜ Not Started | |
+| Scale & Future Features Review | TBD | ⬜ Not Started | Triggered by growth or feature expansion |
 
 ---
 

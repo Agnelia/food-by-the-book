@@ -175,14 +175,19 @@
 - [ ] Database query optimization
 
 ### Security
-- [ ] User authentication (OAuth, JWT, etc.)
-- [ ] Role-based access control (RBAC)
-- [ ] Data encryption at rest and in transit
-- [ ] HTTPS/SSL certificates
-- [ ] Input validation and sanitization
-- [ ] Protection against OWASP Top 10 vulnerabilities
-- [ ] Regular security audits
-- [ ] Secure password policies
+- [x] **User authentication** — Microsoft OAuth 2.0 + JWT (see [ARCHITECTURE.md](ARCHITECTURE.md#authentication--security))
+- [x] **HTTPS/SSL** — Enforced by Azure Static Web Apps and Supabase, no config needed
+- [x] **SQL injection prevention** — Parameterized queries enforced via Npgsql (see [CODE_PATTERNS.md](CODE_PATTERNS.md#repository-pattern-data-access))
+- [x] **XSS prevention** — React automatically escapes all output
+- [x] **Input validation and sanitization** — On both frontend (TypeScript types) and backend (C# data annotations, see [CODE_PATTERNS.md](CODE_PATTERNS.md#modelto-pattern))
+- [x] **CORS** — Configured to allow only the frontend domain (see [ARCHITECTURE.md](ARCHITECTURE.md#authentication--security))
+- [x] **Secrets management** — All secrets stored in Azure App Settings and Supabase env vars, never in code
+- [x] **Data encryption at rest** — Handled by Supabase (PostgreSQL encryption at rest by default)
+- [x] **User-scoped authorization** — Users can only access their own data, validated on every request (see [ARCHITECTURE.md](ARCHITECTURE.md#authorization-strategy))
+- [x] **No passwords** — OAuth only, no password storage or password policies needed
+- [ ] **Rate limiting** — Azure Functions free tier enforces 1M requests/month; per-user rate limiting not implemented for MVP
+- ~~Role-based access control (RBAC)~~ — N/A for MVP, only one user type (recipe owner)
+- ~~Regular security audits~~ — N/A for MVP scale
 
 ### Scalability
 - [ ] Horizontal scaling capability
