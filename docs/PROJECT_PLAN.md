@@ -49,15 +49,17 @@ Families struggle with meal planning due to scattered paper recipes, decision fa
 - [x] Plan API structure (see [ARCHITECTURE.md](ARCHITECTURE.md#api-design))
 - [x] Define security requirements (see [REQUIREMENTS.md](REQUIREMENTS.md#security) + [ARCHITECTURE.md](ARCHITECTURE.md#authentication--security))
 
-### Phase 2: Setup & Infrastructure 📋
-- [ ] Set up version control repository
-- [ ] Create project scaffolding
-- [ ] Set up development environment
-- [ ] Configure linting and code standards
-- [ ] Set up database
-- [ ] Configure authentication system
-- [ ] Set up CI/CD pipeline
-- [ ] Configure hosting/deployment
+### Phase 2: Setup & Infrastructure �
+- [x] Set up version control repository (GitHub: `Agnelia/food-by-the-book`)
+- [x] Create folder structure / project scaffolding skeleton
+- [ ] Initialize frontend project (`package.json`, Vite, React, TypeScript, RTK Query)
+- [ ] Initialize backend project (`.csproj`, Azure Functions .NET 8)
+- [ ] Set up development environment (install dependencies, local settings)
+- [ ] Configure linting and code standards (ESLint, Prettier, `.editorconfig`)
+- [ ] Set up database (Supabase project, run schema migrations in `database/schemas/`)
+- [ ] Configure authentication system (Microsoft Entra app registration, MSAL setup)
+- [ ] Set up CI/CD pipeline (GitHub Actions workflow)
+- [ ] Configure hosting/deployment (Azure Static Web App + Azure Functions, Terraform in `infrastructure/`)
 
 ### Phase 3: MVP Development 🚀
 - [ ] Implement core features (list in REQUIREMENTS.md)
