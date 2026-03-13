@@ -12,7 +12,32 @@ This is a **meal planning & recipe management application** with AI-powered OCR 
 
 ---
 
-## 📚 Required Reading Before Code Generation
+## � What Are You Doing? Jump Straight to the Pattern
+
+**Read this first. Go directly to the relevant section — don't read the whole document.**
+
+| Task | Go here |
+|------|---------|
+| Creating a new page | [CODE_PATTERNS - Page Component Pattern](../docs/CODE_PATTERNS.md#page-component-pattern) |
+| Creating a reusable UI component | [CODE_PATTERNS - UI Component Pattern](../docs/CODE_PATTERNS.md#ui-component-pattern) |
+| Creating a custom hook | [CODE_PATTERNS - Custom Hook Pattern](../docs/CODE_PATTERNS.md#custom-hook-pattern) |
+| Adding a new API endpoint (frontend) | [CODE_PATTERNS - RTK Query API Slice Pattern](../docs/CODE_PATTERNS.md#rtk-query-api-slice-pattern) |
+| Adding a new Azure Function (backend) | [CODE_PATTERNS - Azure Function Pattern](../docs/CODE_PATTERNS.md#azure-function-pattern-http-trigger) |
+| Adding business logic (backend) | [CODE_PATTERNS - Service Pattern](../docs/CODE_PATTERNS.md#service-pattern-business-logic) |
+| Adding database queries | [CODE_PATTERNS - Repository Pattern](../docs/CODE_PATTERNS.md#repository-pattern-data-access) |
+| Defining TypeScript types | [CODE_PATTERNS - TypeScript Types](../docs/CODE_PATTERNS.md#typescript-types) |
+| Handling errors | [CODE_PATTERNS - Error Handling](../docs/CODE_PATTERNS.md#error-handling) |
+| Stuck on naming | [CODE_PATTERNS - Naming Conventions](../docs/CODE_PATTERNS.md#naming-conventions) |
+| File is getting too long | [CODE_PATTERNS - Code Length Guidelines](../docs/CODE_PATTERNS.md#code-length-guidelines) |
+| Code feels messy | [CODE_PATTERNS - Clean Code Principles](../docs/CODE_PATTERNS.md#clean-code-principles) |
+| Debugging data not updating | [CODE_PATTERNS - RTK Query Anti-Patterns](../docs/CODE_PATTERNS.md#rtk-query-anti-patterns) |
+| Understanding folder structure | [CODE_PATTERNS - Project Structure](../docs/CODE_PATTERNS.md#project-structure) |
+| Ordering imports | [CODE_PATTERNS - Import Order](../docs/CODE_PATTERNS.md#import-order) |
+| When/how to comment | [CODE_PATTERNS - Comment Guidelines](../docs/CODE_PATTERNS.md#comment-guidelines) |
+
+---
+
+## 📚 Reference Documents
 
 **ALWAYS reference these files before generating code:**
 
@@ -322,37 +347,7 @@ See [CODE_PATTERNS - RTK Query Anti-Patterns](../docs/CODE_PATTERNS.md#rtk-query
 
 ---
 
-## 💡 How to Use These Instructions
-
-### For New Components
-1. Determine component type: UI, Page, or Common
-2. Go to [CODE_PATTERNS - UI Component Pattern](../docs/CODE_PATTERNS.md#ui-component-pattern), [Page Component Pattern](../docs/CODE_PATTERNS.md#page-component-pattern), or similar
-3. Copy the template structure
-4. Fill in your specific logic
-
-### For New API Endpoints
-1. Create RTK Query API slice following [CODE_PATTERNS - RTK Query API Slice Pattern](../docs/CODE_PATTERNS.md#rtk-query-api-slice-pattern)
-2. Create corresponding Azure Function following [CODE_PATTERNS - Azure Function Pattern](../docs/CODE_PATTERNS.md#azure-function-pattern-http-trigger)
-3. Create Service following [CODE_PATTERNS - Service Pattern](../docs/CODE_PATTERNS.md#service-pattern-business-logic)
-4. Create Repository following [CODE_PATTERNS - Repository Pattern](../docs/CODE_PATTERNS.md#repository-pattern-data-access)
-
-### For Debugging Issues
-1. Check if code follows the patterns in [CODE_PATTERNS.md](../docs/CODE_PATTERNS.md)
-2. Review error handling section: [CODE_PATTERNS - Error Handling](../docs/CODE_PATTERNS.md#error-handling)
-3. Verify RTK Query setup if data isn't updating
-4. Check authentication/authorization if getting 401/403 errors
-5. Check database queries are parameterized
-
-### For Refactoring Code
-1. Reference [CODE_PATTERNS - Clean Code Principles](../docs/CODE_PATTERNS.md#clean-code-principles)
-2. Check file length limits in [CODE_PATTERNS - Code Length Guidelines](../docs/CODE_PATTERNS.md#code-length-guidelines)
-3. Ensure proper separation of concerns (Functions → Services → Repositories)
-4. Don't change functionality unless requested
-5. Run tests after refactoring
-
----
-
-## 📦 Package Usage
+## � Package Usage
 
 ### Frontend (npm)
 - **React Router v6** - routing
@@ -380,20 +375,3 @@ This is an MVP focused on:
 **Success Metric:** 1 real user + deployed to production
 
 **Budget Constraint:** Free tier services only (Azure Functions free tier, Supabase free tier)
-
----
-
-## 🔗 Cross-Reference Guide
-
-**Need to write code? Follow this path:**
-
-1. **Creating a new page** → [CODE_PATTERNS - Page Component Pattern](../docs/CODE_PATTERNS.md#page-component-pattern)
-2. **Creating a new API endpoint** → [CODE_PATTERNS - RTK Query API Slice Pattern](../docs/CODE_PATTERNS.md#rtk-query-api-slice-pattern) + [CODE_PATTERNS - Azure Function Pattern](../docs/CODE_PATTERNS.md#azure-function-pattern-http-trigger)
-3. **Creating a reusable component** → [CODE_PATTERNS - UI Component Pattern](../docs/CODE_PATTERNS.md#ui-component-pattern)
-4. **Creating a custom hook** → [CODE_PATTERNS - Custom Hook Pattern](../docs/CODE_PATTERNS.md#custom-hook-pattern)
-5. **Creating a backend service** → [CODE_PATTERNS - Service Pattern](../docs/CODE_PATTERNS.md#service-pattern-business-logic)
-6. **Creating database access** → [CODE_PATTERNS - Repository Pattern](../docs/CODE_PATTERNS.md#repository-pattern-data-access)
-7. **Stuck on naming** → [CODE_PATTERNS - Naming Conventions](../docs/CODE_PATTERNS.md#naming-conventions)
-8. **File too long** → [CODE_PATTERNS - Code Length Guidelines](../docs/CODE_PATTERNS.md#code-length-guidelines)
-9. **Need to handle errors** → [CODE_PATTERNS - Error Handling](../docs/CODE_PATTERNS.md#error-handling)
-10. **Code feels messy** → [CODE_PATTERNS - Clean Code Principles](../docs/CODE_PATTERNS.md#clean-code-principles)
