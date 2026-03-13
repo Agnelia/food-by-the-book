@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FoodByTheBook — Preserve. Plan. Cook.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Reset & Base ─────────────────────────────────────────── */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --sand:       #e8ddd0;
+        --sand-dark:  #d9c9b5;
+        --sand-light: #f2ede6;
+        --cream:      #faf7f3;
+        --green:      #4a7c59;
+        --green-dark: #3a6346;
+        --green-light:#edf4ef;
+        --orange:     #d97941;
+        --orange-light:#fdf0e8;
+        --brown:      #2c2416;
+        --brown-mid:  #5a4a38;
+        --brown-light:#8a7a6a;
+        --white:      #ffffff;
+        --shadow-sm:  0 2px 8px rgba(44,36,22,0.08);
+        --shadow-md:  0 8px 32px rgba(44,36,22,0.12);
+        --shadow-lg:  0 20px 60px rgba(44,36,22,0.16);
+        --radius-sm:  8px;
+        --radius-md:  16px;
+        --radius-lg:  24px;
+        --radius-xl:  48px;
+      }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--sand);
+        color: var(--brown);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* ─── Nav ───────────────────────────────────────────────────── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(232, 221, 208, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(44,36,22,0.08);
+        padding: 0 5%;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .nav-logo-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--green);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      .nav-logo-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--brown);
+        line-height: 1.2;
+      }
+
+      .nav-logo-text span {
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 500;
+        color: var(--brown-light);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--brown-mid);
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover { color: var(--brown); }
+
+      .btn-signin {
+        background: var(--green);
+        color: var(--white) !important;
+        padding: 9px 20px;
+        border-radius: var(--radius-xl);
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        transition: background 0.2s, transform 0.15s !important;
+      }
+
+      .btn-signin:hover {
+        background: var(--green-dark) !important;
+        transform: translateY(-1px);
+        color: var(--white) !important;
+      }
+
+      /* ─── Hero ──────────────────────────────────────────────────── */
+      .hero {
+        min-height: calc(100vh - 68px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 80px 5% 60px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: '';
+        position: absolute;
+        top: -200px;
+        right: -200px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(74,124,89,0.1) 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        bottom: -100px;
+        left: -150px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(217,121,65,0.08) 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--green-light);
+        color: var(--green);
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 7px 16px;
+        border-radius: var(--radius-xl);
+        margin-bottom: 28px;
+        letter-spacing: 0.04em;
+        border: 1px solid rgba(74,124,89,0.2);
+      }
+
+      .hero-badge::before { content: '✦'; font-size: 0.7rem; }
+
+      .hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.8rem, 6vw, 5rem);
+        font-weight: 700;
+        line-height: 1.15;
+        color: var(--brown);
+        max-width: 780px;
+        margin-bottom: 24px;
+      }
+
+      .hero h1 em {
+        font-style: normal;
+        color: var(--orange);
+      }
+
+      .hero p {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        color: var(--brown-mid);
+        max-width: 560px;
+        margin-bottom: 44px;
+        line-height: 1.7;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 72px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--green);
+        color: var(--white);
+        padding: 15px 32px;
+        border-radius: var(--radius-xl);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 20px rgba(74,124,89,0.35);
+      }
+
+      .btn-primary:hover {
+        background: var(--green-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(74,124,89,0.4);
+      }
+
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: var(--brown-mid);
+        padding: 15px 28px;
+        border-radius: var(--radius-xl);
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        border: 1.5px solid var(--sand-dark);
+        transition: border-color 0.2s, color 0.2s, transform 0.15s;
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--brown-light);
+        color: var(--brown);
+        transform: translateY(-1px);
+      }
+
+      /* ─── Hero Image Cards ──────────────────────────────────────── */
+      .hero-visual {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        align-items: flex-end;
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 800px;
+      }
+
+      .recipe-preview-card {
+        background: var(--white);
+        border-radius: var(--radius-md);
+        padding: 14px;
+        box-shadow: var(--shadow-md);
+        text-align: left;
+        flex: 0 0 auto;
+        transition: transform 0.3s;
+      }
+
+      .recipe-preview-card:hover { transform: translateY(-4px); }
+
+      .recipe-preview-card.card-main {
+        width: 220px;
+        transform: translateY(-12px);
+      }
+
+      .recipe-preview-card.card-side {
+        width: 180px;
+        opacity: 0.9;
+      }
+
+      .card-img {
+        width: 100%;
+        height: 130px;
+        border-radius: var(--radius-sm);
+        object-fit: cover;
+        background: var(--sand);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin-bottom: 10px;
+      }
+
+      .card-img.card-img-sm {
+        height: 100px;
+      }
+
+      .card-category {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 3px 10px;
+        border-radius: 99px;
+        margin-bottom: 6px;
+      }
+
+      .cat-dinner { background: #fdeee6; color: #c0622a; }
+      .cat-breakfast { background: #fef9e7; color: #b08020; }
+      .cat-dessert { background: #f8eaf8; color: #8a4a9a; }
+
+      .card-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--brown);
+        margin-bottom: 6px;
+        line-height: 1.3;
+      }
+
+      .card-meta {
+        display: flex;
+        gap: 12px;
+        font-size: 0.72rem;
+        color: var(--brown-light);
+      }
+
+      .card-meta span { display: flex; align-items: center; gap: 3px; }
+
+      .ocr-badge {
+        position: absolute;
+        top: -16px;
+        right: -16px;
+        background: var(--orange);
+        color: var(--white);
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 99px;
+        box-shadow: 0 4px 12px rgba(217,121,65,0.4);
+        white-space: nowrap;
+      }
+
+      /* ─── Stats Bar ─────────────────────────────────────────────── */
+      .stats-bar {
+        background: var(--white);
+        border-top: 1px solid var(--sand-dark);
+        border-bottom: 1px solid var(--sand-dark);
+        padding: 28px 5%;
+        display: flex;
+        justify-content: center;
+        gap: clamp(32px, 8vw, 96px);
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--green);
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: var(--brown-light);
+        font-weight: 500;
+        letter-spacing: 0.03em;
+      }
+
+      /* ─── Section Commons ───────────────────────────────────────── */
+      section {
+        padding: 96px 5%;
+      }
+
+      .section-label {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--green);
+        margin-bottom: 14px;
+      }
+
+      .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 700;
+        color: var(--brown);
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+
+      .section-subtitle {
+        font-size: 1rem;
+        color: var(--brown-mid);
+        max-width: 520px;
+        line-height: 1.7;
+      }
+
+      /* ─── How It Works ──────────────────────────────────────────── */
+      .how-it-works {
+        background: var(--cream);
+      }
+
+      .how-it-works-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .how-it-works-header {
+        text-align: center;
+        margin-bottom: 64px;
+      }
+
+      .how-it-works-header .section-subtitle {
+        margin: 0 auto;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        position: relative;
+      }
+
+      .steps::before {
+        content: '';
+        position: absolute;
+        top: 42px;
+        left: calc(16.66% + 24px);
+        right: calc(16.66% + 24px);
+        height: 2px;
+        background: repeating-linear-gradient(
+          to right,
+          var(--sand-dark) 0,
+          var(--sand-dark) 8px,
+          transparent 8px,
+          transparent 16px
+        );
+      }
+
+      .step-card {
+        background: var(--white);
+        border-radius: var(--radius-md);
+        padding: 36px 28px;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        transition: box-shadow 0.2s, transform 0.2s;
+      }
+
+      .step-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+      }
+
+      .step-number {
+        width: 48px;
+        height: 48px;
+        background: var(--green);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(74,124,89,0.3);
+      }
+
+      .step-icon {
+        font-size: 2rem;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .step-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--brown);
+        margin-bottom: 10px;
+      }
+
+      .step-card p {
+        font-size: 0.9rem;
+        color: var(--brown-mid);
+        line-height: 1.7;
+      }
+
+      /* ─── Features ──────────────────────────────────────────────── */
+      .features-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: center;
+      }
+
+      .features-text .section-subtitle {
+        margin-bottom: 36px;
+      }
+
+      .feature-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .feature-list li {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+
+      .feature-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--green-light);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+
+      .feature-text strong {
+        display: block;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--brown);
+        margin-bottom: 3px;
+      }
+
+      .feature-text span {
+        font-size: 0.85rem;
+        color: var(--brown-mid);
+        line-height: 1.6;
+      }
+
+      .features-visual {
+        position: relative;
+      }
+
+      .phone-mockup {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        box-shadow: var(--shadow-lg);
+        max-width: 340px;
+        margin: 0 auto;
+      }
+
+      .mockup-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--sand);
+      }
+
+      .mockup-header-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--green);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+      }
+
+      .mockup-header-text strong {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--brown);
+      }
+
+      .mockup-header-text span {
+        font-size: 0.72rem;
+        color: var(--brown-light);
+      }
+
+      .ocr-scan-area {
+        background: var(--sand-light);
+        border-radius: var(--radius-sm);
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        border: 2px dashed var(--sand-dark);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .scan-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(to right, transparent, var(--green), transparent);
+        opacity: 0.6;
+        animation: scan 2s ease-in-out infinite;
+      }
+
+      @keyframes scan {
+        0%   { top: 0; }
+        100% { top: 100%; }
+      }
+
+      .ocr-scan-area span {
+        font-size: 0.8rem;
+        color: var(--brown-light);
+        font-weight: 500;
+      }
+
+      .ocr-result {
+        background: var(--green-light);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        margin-bottom: 12px;
+        border-left: 3px solid var(--green);
+      }
+
+      .ocr-result-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--green);
+        margin-bottom: 6px;
+      }
+
+      .ocr-result-text {
+        font-size: 0.78rem;
+        color: var(--brown-mid);
+        line-height: 1.5;
+      }
+
+      .floating-tag {
+        position: absolute;
+        background: var(--white);
+        border-radius: var(--radius-sm);
+        padding: 8px 12px;
+        box-shadow: var(--shadow-md);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--brown);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .floating-tag.tag-1 {
+        top: -16px;
+        right: -16px;
+        color: var(--green);
+      }
+
+      .floating-tag.tag-2 {
+        bottom: -16px;
+        left: -16px;
+        color: var(--orange);
+      }
+
+      /* ─── Recipes Showcase ──────────────────────────────────────── */
+      .recipes-section {
+        background: var(--sand-light);
+      }
+
+      .recipes-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .recipes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .recipes-header .section-subtitle { margin-bottom: 0; }
+
+      .view-all-link {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--green);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: gap 0.2s;
+        white-space: nowrap;
+      }
+
+      .view-all-link:hover { gap: 10px; }
+
+      .recipes-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .recipe-card {
+        background: var(--white);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow 0.2s, transform 0.2s;
+        cursor: pointer;
+      }
+
+      .recipe-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+      }
+
+      .recipe-card-img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        background: var(--sand);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+      }
+
+      .recipe-card-body {
+        padding: 18px;
+      }
+
+      .recipe-card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .difficulty {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 99px;
+        letter-spacing: 0.04em;
+      }
+
+      .difficulty-easy    { background: #e8f5e9; color: #2e7d32; }
+      .difficulty-medium  { background: var(--orange-light); color: #c0622a; }
+
+      .recipe-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--brown);
+        margin-bottom: 6px;
+        line-height: 1.3;
+      }
+
+      .recipe-card-desc {
+        font-size: 0.82rem;
+        color: var(--brown-light);
+        line-height: 1.6;
+        margin-bottom: 14px;
+      }
+
+      .recipe-card-footer {
+        display: flex;
+        gap: 16px;
+        font-size: 0.78rem;
+        color: var(--brown-light);
+        border-top: 1px solid var(--sand);
+        padding-top: 12px;
+      }
+
+      .recipe-card-footer span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* ─── Categories ────────────────────────────────────────────── */
+      .categories-section {
+        text-align: center;
+      }
+
+      .categories-inner {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .categories-inner .section-title { margin-bottom: 8px; }
+      .categories-inner .section-subtitle {
+        margin: 0 auto 48px;
+        text-align: center;
+      }
+
+      .categories-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .category-pill {
+        background: var(--white);
+        color: var(--brown-mid);
+        border: 1.5px solid var(--sand-dark);
+        padding: 12px 24px;
+        border-radius: var(--radius-xl);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .category-pill:hover {
+        background: var(--green);
+        border-color: var(--green);
+        color: var(--white);
+        transform: translateY(-2px);
+      }
+
+      .category-pill.active {
+        background: var(--green);
+        border-color: var(--green);
+        color: var(--white);
+      }
+
+      /* ─── Testimonial ───────────────────────────────────────────── */
+      .testimonial-section {
+        background: var(--green);
+        text-align: center;
+      }
+
+      .testimonial-inner {
+        max-width: 680px;
+        margin: 0 auto;
+      }
+
+      .quote-mark {
+        font-family: 'Playfair Display', serif;
+        font-size: 6rem;
+        color: rgba(255,255,255,0.2);
+        line-height: 0.6;
+        margin-bottom: 24px;
+        display: block;
+      }
+
+      .testimonial-text {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+        font-style: italic;
+        color: var(--white);
+        line-height: 1.5;
+        margin-bottom: 32px;
+      }
+
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .author-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+      }
+
+      .author-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--white);
+        text-align: left;
+      }
+
+      .author-role {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.7);
+        text-align: left;
+      }
+
+      /* ─── CTA Section ───────────────────────────────────────────── */
+      .cta-section {
+        background: var(--sand-light);
+        text-align: center;
+      }
+
+      .cta-section .section-title { margin-bottom: 12px; }
+      .cta-section .section-subtitle { margin: 0 auto 40px; text-align: center; }
+
+      .cta-card {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 56px 40px;
+        max-width: 620px;
+        margin: 0 auto;
+        box-shadow: var(--shadow-md);
+      }
+
+      .cta-card .section-label { display: block; margin-bottom: 16px; }
+
+      .microsoft-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--white);
+        color: var(--brown);
+        border: 1.5px solid var(--sand-dark);
+        padding: 14px 28px;
+        border-radius: var(--radius-sm);
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 24px;
+      }
+
+      .microsoft-btn:hover {
+        border-color: var(--brown-light);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+      }
+
+      .microsoft-logo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        width: 20px;
+        height: 20px;
+      }
+
+      .microsoft-logo span {
+        display: block;
+        border-radius: 1px;
+      }
+
+      .microsoft-logo span:nth-child(1) { background: #f25022; }
+      .microsoft-logo span:nth-child(2) { background: #7fba00; }
+      .microsoft-logo span:nth-child(3) { background: #00a4ef; }
+      .microsoft-logo span:nth-child(4) { background: #ffb900; }
+
+      .cta-divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 20px 0;
+        color: var(--brown-light);
+        font-size: 0.8rem;
+      }
+
+      .cta-divider::before,
+      .cta-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--sand-dark);
+      }
+
+      .cta-note {
+        font-size: 0.78rem;
+        color: var(--brown-light);
+        line-height: 1.6;
+      }
+
+      .cta-note strong { color: var(--brown-mid); }
+
+      /* ─── Footer ────────────────────────────────────────────────── */
+      footer {
+        background: var(--brown);
+        color: rgba(255,255,255,0.7);
+        padding: 48px 5% 32px;
+      }
+
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+        padding-bottom: 40px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .footer-brand .nav-logo-text { color: var(--white); }
+      .footer-brand .nav-logo-text span { color: rgba(255,255,255,0.4); }
+
+      .footer-brand p {
+        font-size: 0.85rem;
+        margin-top: 12px;
+        max-width: 260px;
+        line-height: 1.7;
+      }
+
+      .footer-links-group h4 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--white);
+        margin-bottom: 14px;
+      }
+
+      .footer-links-group a {
+        display: block;
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.6);
+        text-decoration: none;
+        margin-bottom: 8px;
+        transition: color 0.2s;
+      }
+
+      .footer-links-group a:hover { color: var(--white); }
+
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 0.8rem;
+      }
+
+      .footer-bottom a {
+        color: rgba(255,255,255,0.5);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .footer-bottom a:hover { color: var(--white); }
+
+      /* ─── Responsive ────────────────────────────────────────────── */
+      @media (max-width: 900px) {
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        .steps::before { display: none; }
+
+        .features-inner {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+
+        .features-visual { order: -1; }
+
+        .recipes-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .hero-visual {
+          display: none;
+        }
+      }
+
+      @media (max-width: 600px) {
+        nav { padding: 0 4%; }
+
+        .nav-links { gap: 20px; }
+
+        .recipes-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-top {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ─── Navigation ─────────────────────────────────────────────── -->
+    <nav>
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">📖</div>
+        <div class="nav-logo-text">
+          FoodByTheBook
+          <span>Recipe Companion</span>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#recipes">Recipes</a></li>
+        <li><a href="#get-started" class="btn-signin">Sign in</a></li>
+      </ul>
+    </nav>
+
+    <!-- ─── Hero ───────────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-badge">Your family's recipe companion</div>
+
+      <h1>
+        Your treasured recipes,<br />
+        <em>digitized & organized</em><br />
+        for good.
+      </h1>
+
+      <p>
+        Snap a photo of any handwritten or printed recipe and we'll
+        digitize it instantly. Build your family's cookbook, plan meals,
+        and never lose a recipe again.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#get-started" class="btn-primary">
+          Get started free &rarr;
+        </a>
+        <a href="#how-it-works" class="btn-secondary">
+          ▶ See how it works
+        </a>
+      </div>
+
+      <!-- Recipe preview cards -->
+      <div class="hero-visual">
+        <div class="recipe-preview-card card-side">
+          <div class="card-img card-img-sm">🥞</div>
+          <div class="card-category cat-breakfast">Breakfast</div>
+          <div class="card-title">Grandma's Pancakes</div>
+          <div class="card-meta">
+            <span>⏱ 20 min</span>
+            <span>👤 4</span>
+          </div>
+        </div>
+
+        <div class="recipe-preview-card card-main" style="position: relative;">
+          <div class="ocr-badge">✓ Digitized by OCR</div>
+          <div class="card-img">🍝</div>
+          <div class="card-category cat-dinner">Dinner</div>
+          <div class="card-title">Pasta Carbonara</div>
+          <div class="card-meta">
+            <span>⏱ 25 min</span>
+            <span>👤 4</span>
+          </div>
+        </div>
+
+        <div class="recipe-preview-card card-side">
+          <div class="card-img card-img-sm">🎂</div>
+          <div class="card-category cat-dessert">Dessert</div>
+          <div class="card-title">Chocolate Cake</div>
+          <div class="card-meta">
+            <span>⏱ 60 min</span>
+            <span>👤 8</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Stats Bar ──────────────────────────────────────────────── -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Recipes stored</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">📸</div>
+        <div class="stat-label">OCR powered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">0 kr</div>
+        <div class="stat-label">Free to start</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">🔒</div>
+        <div class="stat-label">Your data, private</div>
+      </div>
+    </div>
+
+    <!-- ─── How It Works ───────────────────────────────────────────── -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="how-it-works-inner">
+        <div class="how-it-works-header">
+          <span class="section-label">Simple as 1-2-3</span>
+          <h2 class="section-title">From paper to digital<br/>in seconds</h2>
+          <p class="section-subtitle">
+            No more lost recipe cards or faded handwriting.
+            FoodByTheBook preserves your family's culinary heritage effortlessly.
+          </p>
+        </div>
+
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <span class="step-icon">📷</span>
+            <h3>Snap a photo</h3>
+            <p>
+              Take a picture of any handwritten note, printed card, or cookbook
+              page. Our OCR engine reads it automatically — even messy handwriting.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <span class="step-icon">✨</span>
+            <h3>We digitize it</h3>
+            <p>
+              The recipe is extracted, cleaned up, and structured automatically
+              with title, ingredients, and step-by-step instructions — ready to use.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <span class="step-icon">🍽️</span>
+            <h3>Cook & plan meals</h3>
+            <p>
+              Browse your personal cookbook, plan your weekly meals, and let
+              the whole family rate what they loved — all in one place.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Features ──────────────────────────────────────────────── -->
+    <section id="features">
+      <div class="features-inner">
+        <div class="features-text">
+          <span class="section-label">Everything you need</span>
+          <h2 class="section-title">Built for busy<br/>families</h2>
+          <p class="section-subtitle">
+            FoodByTheBook is more than a recipe box — it's your family's
+            entire cooking life, organized and accessible on any device.
+          </p>
+
+          <ul class="feature-list">
+            <li>
+              <div class="feature-icon">📖</div>
+              <div class="feature-text">
+                <strong>OCR Recipe Scanning</strong>
+                <span>Digitize handwritten and printed recipes instantly by taking a photo.</span>
+              </div>
+            </li>
+            <li>
+              <div class="feature-icon">🗂️</div>
+              <div class="feature-text">
+                <strong>Personal Cookbook</strong>
+                <span>All your recipes in one searchable, beautifully organized collection.</span>
+              </div>
+            </li>
+            <li>
+              <div class="feature-icon">📅</div>
+              <div class="feature-text">
+                <strong>Meal Planning</strong>
+                <span>Plan your week's meals at a glance. No more daily "what's for dinner?" stress.</span>
+              </div>
+            </li>
+            <li>
+              <div class="feature-icon">🔒</div>
+              <div class="feature-text">
+                <strong>Private & Secure</strong>
+                <span>Sign in with Microsoft. Your recipes are yours — never shared, never sold.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="features-visual">
+          <div class="phone-mockup" style="position: relative;">
+            <div class="floating-tag tag-1">✓ Recipe saved!</div>
+            <div class="floating-tag tag-2">📸 Scanning...</div>
+
+            <div class="mockup-header">
+              <div class="mockup-header-icon">📖</div>
+              <div class="mockup-header-text">
+                <strong>Add Recipe</strong>
+                <span>Scan or type manually</span>
+              </div>
+            </div>
+
+            <div class="ocr-scan-area">
+              <div class="scan-lines"></div>
+              <span style="font-size: 2rem;">📄</span>
+              <span>Point camera at recipe card</span>
+            </div>
+
+            <div class="ocr-result">
+              <div class="ocr-result-label">✓ Text detected</div>
+              <div class="ocr-result-text">
+                <strong>Farmor's Kladdkaka</strong><br/>
+                Smör, socker, ägg, kakao, vetemjöl, vaniljsocker...
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <div style="flex:1; background: var(--green); color: white; text-align: center; padding: 10px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;">
+                Save recipe
+              </div>
+              <div style="flex:1; background: var(--sand); color: var(--brown-mid); text-align: center; padding: 10px; border-radius: 8px; font-size: 0.82rem; font-weight: 500; cursor: pointer;">
+                Edit first
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Recipes Showcase ───────────────────────────────────────── -->
+    <section class="recipes-section" id="recipes">
+      <div class="recipes-inner">
+        <div class="recipes-header">
+          <div>
+            <span class="section-label">Featured Recipes</span>
+            <h2 class="section-title">Hand-picked favorites</h2>
+            <p class="section-subtitle">Beloved recipes from our community's digital cookbooks.</p>
+          </div>
+          <a href="#get-started" class="view-all-link">View all recipes &rarr;</a>
+        </div>
+
+        <div class="recipes-grid">
+          <div class="recipe-card">
+            <div class="recipe-card-img">🍝</div>
+            <div class="recipe-card-body">
+              <div class="recipe-card-meta">
+                <span class="card-category cat-dinner" style="font-size: 0.68rem; padding: 3px 10px; border-radius: 99px;">Dinner</span>
+                <span class="difficulty difficulty-medium">Medium</span>
+              </div>
+              <div class="recipe-card-title">Homemade Pasta Carbonara</div>
+              <div class="recipe-card-desc">A classic Italian pasta dish with creamy egg sauce, crispy bacon, and parmesan cheese.</div>
+              <div class="recipe-card-footer">
+                <span>⏱ 25 mins</span>
+                <span>👤 4 servings</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-img">🥗</div>
+            <div class="recipe-card-body">
+              <div class="recipe-card-meta">
+                <span class="card-category" style="background: #e8f5e9; color: #2e7d32; font-size: 0.68rem; padding: 3px 10px; border-radius: 99px;">Salad</span>
+                <span class="difficulty difficulty-easy">Easy</span>
+              </div>
+              <div class="recipe-card-title">Fresh Garden Salad</div>
+              <div class="recipe-card-desc">Crisp, colorful salad bursting with fresh vegetables and a tangy vinaigrette.</div>
+              <div class="recipe-card-footer">
+                <span>⏱ 15 mins</span>
+                <span>👤 4 servings</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-img">🥞</div>
+            <div class="recipe-card-body">
+              <div class="recipe-card-meta">
+                <span class="card-category cat-breakfast" style="font-size: 0.68rem; padding: 3px 10px; border-radius: 99px;">Breakfast</span>
+                <span class="difficulty difficulty-easy">Easy</span>
+              </div>
+              <div class="recipe-card-title">Fluffy Pancakes with Berries</div>
+              <div class="recipe-card-desc">Light and fluffy pancakes topped with fresh berries and maple syrup.</div>
+              <div class="recipe-card-footer">
+                <span>⏱ 20 mins</span>
+                <span>👤 4 servings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Categories ─────────────────────────────────────────────── -->
+    <section class="categories-section">
+      <div class="categories-inner">
+        <span class="section-label">Browse by type</span>
+        <h2 class="section-title">Explore by Category</h2>
+        <p class="section-subtitle">Find exactly what you're craving tonight.</p>
+
+        <div class="categories-pills">
+          <a href="#get-started" class="category-pill active">🍳 Breakfast</a>
+          <a href="#get-started" class="category-pill">🍽️ Dinner</a>
+          <a href="#get-started" class="category-pill">🎂 Dessert</a>
+          <a href="#get-started" class="category-pill">🥗 Salad</a>
+          <a href="#get-started" class="category-pill">🍜 Soup</a>
+          <a href="#get-started" class="category-pill">🥩 Meat</a>
+          <a href="#get-started" class="category-pill">🌿 Vegetarian</a>
+          <a href="#get-started" class="category-pill">🐟 Fish</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Testimonial ────────────────────────────────────────────── -->
+    <section class="testimonial-section">
+      <div class="testimonial-inner">
+        <span class="quote-mark">"</span>
+        <p class="testimonial-text">
+          I finally digitized my grandmother's recipe box — 47 handwritten
+          cards in one afternoon. My daughters can now access our family
+          recipes forever.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩</div>
+          <div>
+            <div class="author-name">Sarah K.</div>
+            <div class="author-role">Mother of two · Early user</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CTA ────────────────────────────────────────────────────── -->
+    <section class="cta-section" id="get-started">
+      <div class="cta-card">
+        <span class="section-label">Start preserving today</span>
+        <h2 class="section-title" style="margin-bottom: 12px;">Ready to build your<br/>family cookbook?</h2>
+        <p class="section-subtitle" style="margin: 0 auto 32px; text-align: center;">
+          It's free, private, and takes less than a minute to get started.
+        </p>
+
+        <a href="#" class="microsoft-btn">
+          <div class="microsoft-logo">
+            <span></span><span></span>
+            <span></span><span></span>
+          </div>
+          Sign in with Microsoft
+        </a>
+
+        <div class="cta-divider">No account needed · Just sign in</div>
+
+        <p class="cta-note">
+          <strong>100% private.</strong> Your recipes are only visible to you.
+          We use Microsoft authentication — no passwords to remember.
+          No credit card. No subscription. Free forever.
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── Footer ─────────────────────────────────────────────────── -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <div class="nav-logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 0;">
+              <div class="nav-logo-icon" style="flex-shrink: 0;">📖</div>
+              <div class="nav-logo-text">
+                FoodByTheBook
+                <span>Recipe Companion</span>
+              </div>
+            </div>
+            <p>Preserve your family's culinary heritage. Plan your meals. Cook with joy.</p>
+          </div>
+
+          <div class="footer-links-group">
+            <h4>Product</h4>
+            <a href="#how-it-works">How it works</a>
+            <a href="#features">Features</a>
+            <a href="#recipes">Recipes</a>
+            <a href="#get-started">Sign in</a>
+          </div>
+
+          <div class="footer-links-group">
+            <h4>About</h4>
+            <a href="#">Our story</a>
+            <a href="#">Privacy policy</a>
+            <a href="#">Terms of service</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>&copy; 2026 FoodByTheBook. Made with ❤️ for families.</span>
+          <div style="display: flex; gap: 20px;">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>
